@@ -13,7 +13,11 @@ enum PromptType {
 }
 
 struct PromptMeasurementView: View {
-    let type: PromptType
+    private let type: PromptType
+    
+    init(type: PromptType) {
+        self.type = type
+    }
     
     var body: some View {
         HStack {
