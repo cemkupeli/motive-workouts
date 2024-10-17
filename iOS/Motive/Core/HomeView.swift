@@ -9,7 +9,31 @@ import SwiftUI
 
 struct HomeView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("Motive")
+            .font(.custom("Kalam-Regular", size: 44).weight(.bold))
+            .foregroundColor(.white)
+            .padding()
+            .frame(maxWidth: .infinity)
+            .background(.indigo)
+            .offset(y: -20)
+        
+        Spacer()
+        
+        CalendarView()
+        
+        Button {
+            
+        } label: {
+            PromptMeasurementView(type: .pre)
+        }
+        
+        Button {
+            
+        } label: {
+            PromptMeasurementView(type: .post)
+        }
+        
+        Spacer()
     }
 }
 
