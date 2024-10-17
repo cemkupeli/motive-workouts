@@ -12,10 +12,10 @@ struct HomeView: View {
         Text("Motive")
             .font(.custom("Kalam-Regular", size: 44).weight(.bold))
             .foregroundColor(.white)
-            .padding()
+            .padding(.top, 20)
             .frame(maxWidth: .infinity)
             .background(.indigo)
-            .offset(y: -20)
+            .offset(y: -30)
         
         Spacer()
         
@@ -33,6 +33,7 @@ struct HomeView: View {
             PromptMeasurementView(type: .post)
         }
         
+        Spacer()
         Spacer()
     }
 }
