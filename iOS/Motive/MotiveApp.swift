@@ -22,7 +22,7 @@ struct MotiveApp: App {
     
     var body: some Scene {
         WindowGroup {
-            MeasurementView(type: .post)
+            ContentView()
         }
     }
 }

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject var router: Router
+    @StateObject var userDataManager: UserDataManager
     
     var body: some View {
         Text("Motive")
@@ -23,7 +24,7 @@ struct HomeView: View {
         
         // CalendarView()
         
-        
+        Text("UID: \(userDataManager.authUser?.uid ?? "")")
         
         Button {
             router.currentRoute.append(Route.measurement(type: .pre))
@@ -43,5 +44,5 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView(router: Router())
+    HomeView(router: Router(), userDataManager: UserDataManager())
 }
