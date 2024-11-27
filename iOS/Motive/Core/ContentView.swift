@@ -8,14 +8,20 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject var router = Router()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack(path: $router.currentRoute) {
+            HomeView(router: router)
+                .navigationDestination(for: Route.self) { route in
+                    switch route {
+                    case .home:
+                        HomeView(router: router)
+                    case .measurement(let type):
+                        MeasurementView(type: type)
+                    }
+                }
         }
-        .padding()
     }
 }
 

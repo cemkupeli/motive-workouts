@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct HomeView: View {
+    @StateObject var router: Router
+    
     var body: some View {
         Text("Motive")
             .font(.custom("Kalam-Regular", size: 44).weight(.bold))
@@ -19,16 +21,18 @@ struct HomeView: View {
         
         Spacer()
         
-        CalendarView()
+        // CalendarView()
+        
+        
         
         Button {
-            
+            router.currentRoute.append(Route.measurement(type: .pre))
         } label: {
             PromptMeasurementView(type: .pre)
         }
         
         Button {
-            
+            router.currentRoute.append(Route.measurement(type: .post))
         } label: {
             PromptMeasurementView(type: .post)
         }
@@ -39,5 +43,5 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView()
+    HomeView(router: Router())
 }
