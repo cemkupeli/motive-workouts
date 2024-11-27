@@ -24,3 +24,5 @@ Package.resolved
 .build/
 
 .DS_Store
+
+GoogleService-Info.plist
