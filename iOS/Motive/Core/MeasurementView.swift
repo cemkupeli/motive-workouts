@@ -8,9 +8,12 @@
 import SwiftUI
 
 struct MeasurementView: View {
+    @StateObject var userDataManager: UserDataManager
     @State private var xPosition: Double = 0
     @State private var yPosition: Double = 0
     @State private var sliderValue: Double = 4
+    
+    @Environment(\.dismiss) var dismiss
     
     private var motivationLabels = [
         "1 - Very unmotivated",
@@ -23,7 +26,8 @@ struct MeasurementView: View {
     ]
     private let type: PromptType
     
-    init(type: PromptType) {
+    init(userDataManager: UserDataManager, type: PromptType) {
+        self._userDataManager = StateObject(wrappedValue: userDataManager)
         self.type = type
     }
 
@@ -100,6 +104,21 @@ struct MeasurementView: View {
         Text(motivationLabels[Int(sliderValue) - 1])
             .padding(.top, 10)
         
+        Button {
+            userDataManager.setMeasurements(type: type, measurements: [xPosition, yPosition, sliderValue])
+            dismiss()
+        } label: {
+            Text("Save")
+                .font(.headline)
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .cornerRadius(10)
+        }
+        .padding(.horizontal, 40)
+        .padding(.top, 20)
+        
         Spacer()
     }
 
@@ -138,5 +157,5 @@ private struct Axes: Shape {
 }
 
 #Preview {
-    MeasurementView(type: .pre)
+    MeasurementView(userDataManager: UserDataManager(), type: .pre)
 }

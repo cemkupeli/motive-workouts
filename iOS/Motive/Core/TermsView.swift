@@ -19,8 +19,7 @@ extension UserDefaults {
 }
 
 struct TermsView: View {
-    @Environment(\.dismiss) var dismiss
-    @StateObject var userDataManager = UserDataManager()
+    @StateObject var router: Router
 
     var body: some View {
         VStack {
@@ -39,19 +38,14 @@ struct TermsView: View {
             .buttonStyle(.borderedProminent)
             .padding()
         }
-        .onReceive(userDataManager.$authUser) { user in
-            if user != nil {
-                dismiss()
-            }
-        }
     }
 
     private func agreeToTerms() {
         UserDefaults.standard.hasAgreedToTerms = true
-        userDataManager.signIn()
+        router.agreedToTerms = true
     }
 }
 
 #Preview {
-    TermsView()
+    TermsView(router: Router())
 }
