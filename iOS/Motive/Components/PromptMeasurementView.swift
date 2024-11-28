@@ -14,18 +14,28 @@ enum PromptType {
 
 struct PromptMeasurementView: View {
     private let type: PromptType
+    private let unlocked: Bool
     
-    init(type: PromptType) {
+    init(type: PromptType, unlocked: Bool) {
         self.type = type
+        self.unlocked = unlocked
     }
     
     var body: some View {
         HStack {
-            Image(type == .pre ? "gym" : "recovery")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 24, height: 24)
-                .padding(.leading, 16)
+            if unlocked {
+                Image(type == .pre ? "gym" : "recovery")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 24, height: 24)
+                    .padding(.leading, 16)
+            } else {
+                Image(systemName: "lock.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 24, height: 24)
+                    .padding(.leading, 16)
+            }
             
             Text(type == .pre ? "Complete pre-workout report" : "Complete post-workout report")
                 .font(.headline)
@@ -49,5 +59,5 @@ struct PromptMeasurementView: View {
 
 
 #Preview {
-    PromptMeasurementView(type: .pre)
+    PromptMeasurementView(type: .pre, unlocked: true)
 }

@@ -11,6 +11,20 @@ struct HomeView: View {
     @StateObject var router: Router
     @StateObject var userDataManager: UserDataManager
     
+    private var preUnlocked: Bool {
+        guard let user = userDataManager.user else { return false }
+        guard let measurements = user.measurements[DateService.compressedDate(from: Date.now)] else { return true }
+        if measurements.keys.contains("predicted") || measurements.keys.contains("actual") { return false }
+        return true
+    }
+    
+    private var postUnlocked: Bool {
+        guard let user = userDataManager.user else { return false }
+        guard let measurements = user.measurements[DateService.compressedDate(from: Date.now)] else { return false }
+        if measurements.keys.contains("predicted") && !measurements.keys.contains("actual") { return true }
+        return false
+    }
+    
     var body: some View {
         Group {
             if userDataManager.user == nil {
@@ -34,13 +48,22 @@ struct HomeView: View {
                 Button {
                     router.currentRoute.append(Route.measurement(type: .pre))
                 } label: {
-                    PromptMeasurementView(type: .pre)
+                    PromptMeasurementView(type: .pre, unlocked: preUnlocked)
                 }
+                .disabled(!preUnlocked)
                 
                 Button {
                     router.currentRoute.append(Route.measurement(type: .post))
                 } label: {
-                    PromptMeasurementView(type: .post)
+                    PromptMeasurementView(type: .post, unlocked: postUnlocked)
+                }
+                .disabled(!postUnlocked)
+                
+                if (!preUnlocked && !postUnlocked) {
+                    let predicted = getMeasurements(type: .pre)
+                    let actual = getMeasurements(type: .post)
+                    Text("Predicted: \(predicted[0]), \(predicted[1]), \(predicted[2])")
+                    Text("Actual: \(actual[0]), \(actual[1]), \(actual[2])")
                 }
                 
                 Spacer()
@@ -54,12 +77,17 @@ struct HomeView: View {
                         try await userDataManager.signIn()
                     }
                     try await userDataManager.fetchUserData()
-                    print(userDataManager.user?.measurements)
                 } catch {
                     print("Error: \(error.localizedDescription)")
                 }
             }
         }
+    }
+    
+    private func getMeasurements(type: PromptType) -> [Double] {
+        guard let user = userDataManager.user else { return [] }
+        guard let measurements = user.measurements[DateService.compressedDate(from: Date.now)] else { return [] }
+        return measurements[type == .pre ? "predicted" : "actual"] ?? []
     }
 }
 
