@@ -43,7 +43,7 @@ struct HomeView: View {
                 
                 // CalendarView()
                 
-                Text("UID: \(userDataManager.authUser?.uid ?? "")")
+                // Text("UID: \(userDataManager.authUser?.uid ?? "")")
                 
                 Button {
                     router.currentRoute.append(Route.measurement(type: .pre))
@@ -60,10 +60,46 @@ struct HomeView: View {
                 .disabled(!postUnlocked)
                 
                 if (!preUnlocked && !postUnlocked) {
+                    let measurementTitles = ["Valence", "Arousal", "Motivation"]
                     let predicted = getMeasurements(type: .pre)
                     let actual = getMeasurements(type: .post)
-                    Text("Predicted: \(predicted[0]), \(predicted[1]), \(predicted[2])")
-                    Text("Actual: \(actual[0]), \(actual[1]), \(actual[2])")
+                    Grid(alignment: .center) {
+                        // Header Row (Optional)
+                        GridRow {
+                            Text("")
+                                .fontWeight(.bold)
+                            ForEach(0..<3, id: \.self) { index in
+                                Text(measurementTitles[index])
+                                    .fontWeight(.bold)
+                                    .frame(maxWidth: .infinity)
+                            }
+                        }
+                        Divider()
+                        // Predicted Values Row
+                        GridRow {
+                            Text("Predicted:")
+                                .fontWeight(.bold)
+                            ForEach(0..<3, id: \.self) { index in
+                                Text("\(Int(round(predicted[index])))")
+                                    .frame(maxWidth: .infinity)
+                            }
+                        }
+                        Divider()
+                        // Actual Values Row with Indicators
+                        GridRow {
+                            Text("Actual:")
+                                .fontWeight(.bold)
+                            ForEach(0..<3, id: \.self) { index in
+                                HStack(spacing: 4) {
+                                    IndicatorView(difference: actual[index] - predicted[index])
+                                        .frame(width: 10, height: 10)
+                                    Text("\(Int(round(actual[index])))")
+                                }
+                                .frame(maxWidth: .infinity)
+                            }
+                        }
+                    }
+                    .padding()
                 }
                 
                 Spacer()
