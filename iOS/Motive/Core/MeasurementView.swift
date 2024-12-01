@@ -39,6 +39,11 @@ struct MeasurementView: View {
         
         Spacer()
         
+        Text("Indicate your **\(type == .pre ? "predicted" : "current")** emotional state on the graph below\(type == .pre ? " (i.e. how do you think you will feel after this workout?)" : "").")
+            .padding()
+            .lineLimit(nil)
+            .fixedSize(horizontal: false, vertical: true)
+        
         // Graph area with touch interaction for the dARM measure
         ZStack {
             GeometryReader { geometry in
@@ -73,14 +78,14 @@ struct MeasurementView: View {
         // Add the axis labels as overlays to keep the graph in place
         .overlay(
             // y-axis label
-            Text("Arousal")
+            Text("**Arousal (Alertness)**")
                 .rotationEffect(.degrees(-90))
                 .offset(x: -170)
             , alignment: .center
         )
         .overlay(
             // x-axis label
-            Text("Valence")
+            Text("**Valence (Pleasurableness)**")
                 .padding(.top, 0)
                 .offset(y: 170)
             , alignment: .center
@@ -91,7 +96,7 @@ struct MeasurementView: View {
         Text("Valence: \(Int(xPosition)), Arousal: \(Int(yPosition))")
             .padding(.top, 30)
         
-        Text("How motivated are you to exercise? (1-7)")
+        Text("How motivated are you to keep exercising? (1-7)")
             .padding(.top, 50)
         
         Slider(
