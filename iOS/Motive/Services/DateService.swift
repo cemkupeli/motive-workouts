@@ -16,7 +16,17 @@ class DateService {
         return formatter
     }()
     
+    static private let fullDateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE, MMM d"
+        return formatter
+    }()
+    
     static func compressedDate(from date: Date) -> String {
         return DateService.compressedDateFormatter.string(from: date)
+    }
+    
+    static func fullDate(from date: Date) -> String {
+        return DateService.fullDateFormatter.string(from: date)
     }
 }

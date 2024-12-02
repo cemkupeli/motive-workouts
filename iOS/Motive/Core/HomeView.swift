@@ -41,6 +41,11 @@ struct HomeView: View {
                 
                 Spacer()
                 
+                Text(DateService.fullDate(from: Date.now))
+                    .font(.headline)
+                    .foregroundColor(.gray)
+                    .padding(.bottom, 10)
+                
                 // CalendarView()
                 
                 // Text("UID: \(userDataManager.authUser?.uid ?? "")")
@@ -63,8 +68,15 @@ struct HomeView: View {
                     let measurementTitles = ["Valence", "Arousal", "Motivation"]
                     let predicted = getMeasurements(type: .pre)
                     let actual = getMeasurements(type: .post)
+                    
+                    Text("You've completed your workout for today!")
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                        .multilineTextAlignment(.center)
+                        .padding(.top, 20)
+                        .padding(.horizontal, 10)
+                    
                     Grid(alignment: .center) {
-                        // Header Row (Optional)
                         GridRow {
                             Text("")
                                 .fontWeight(.bold)
@@ -75,7 +87,6 @@ struct HomeView: View {
                             }
                         }
                         Divider()
-                        // Predicted Values Row
                         GridRow {
                             Text("Predicted:")
                                 .fontWeight(.bold)
@@ -85,7 +96,6 @@ struct HomeView: View {
                             }
                         }
                         Divider()
-                        // Actual Values Row with Indicators
                         GridRow {
                             Text("Actual:")
                                 .fontWeight(.bold)
