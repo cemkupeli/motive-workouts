@@ -109,7 +109,7 @@ struct CalendarView: View {
                     .background(Color.blue)
                     .cornerRadius(10)
             }
-            .padding(.top, 20)
+            .padding(.top, 10)
         }
         .padding()
     }

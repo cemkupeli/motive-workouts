@@ -50,7 +50,7 @@ struct HomeView: View {
                     .padding(.vertical, 10)
                     .frame(maxWidth: .infinity)
                     .background(.indigo)
-                    .offset(y: -30)
+                    .offset(y: -20)
                 
                 ScrollView {
                     VStack(spacing: 20) {

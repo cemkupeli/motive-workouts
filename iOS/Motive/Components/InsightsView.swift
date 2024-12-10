@@ -88,7 +88,6 @@ struct InsightsView: View {
             }
             .padding()
         }
-
     }
 }
 
