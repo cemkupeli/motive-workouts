@@ -21,24 +21,21 @@ struct HomeView: View {
     private var insightsAvailable: Bool {
         guard let user = userDataManager.user else { return false }
         guard let measurements = user.measurements[DateService.compressedDate(from: selectedDate)] else { return false }
-        if measurements.keys.contains("predicted") && measurements.keys.contains("actual") { return true }
-        return false
+        return measurements.keys.contains("predicted") && measurements.keys.contains("actual")
     }
     
     // If the pre-workout report is enabled for today
     private var preUnlocked: Bool {
         guard let user = userDataManager.user else { return false }
         guard let measurements = user.measurements[DateService.compressedDate(from: Date.now)] else { return true }
-        if measurements.keys.contains("predicted") || measurements.keys.contains("actual") { return false }
-        return true
+        return !measurements.keys.contains("predicted") && !measurements.keys.contains("actual")
     }
     
     // If the post-workout report is enabled for today
     private var postUnlocked: Bool {
         guard let user = userDataManager.user else { return false }
         guard let measurements = user.measurements[DateService.compressedDate(from: Date.now)] else { return false }
-        if measurements.keys.contains("predicted") && !measurements.keys.contains("actual") { return true }
-        return false
+        return measurements.keys.contains("predicted") && !measurements.keys.contains("actual")
     }
     
     var body: some View {
@@ -50,124 +47,52 @@ struct HomeView: View {
                 Text("Motive")
                     .font(.custom("Kalam-Regular", size: 44).weight(.bold))
                     .foregroundColor(.white)
-                    .padding(.top, 20)
+                    .padding(.vertical, 10)
                     .frame(maxWidth: .infinity)
                     .background(.indigo)
                     .offset(y: -30)
                 
-                Spacer()
-                
-                CalendarView(selectedDate: $selectedDate)
-                
-                if todaySelected {
-                    Button {
-                        router.currentRoute.append(Route.measurement(type: .pre))
-                    } label: {
-                        PromptMeasurementView(type: .pre, unlocked: preUnlocked)
-                    }
-                    .disabled(!preUnlocked)
-                    
-                    Button {
-                        router.currentRoute.append(Route.measurement(type: .post))
-                    } label: {
-                        PromptMeasurementView(type: .post, unlocked: postUnlocked)
-                    }
-                    .disabled(!postUnlocked)
-                    
-                    if (!preUnlocked && !postUnlocked) {
-                        let measurementTitles = ["Valence", "Arousal", "Motivation"]
-                        let predicted = getMeasurements(type: .pre, date: selectedDate)
-                        let actual = getMeasurements(type: .post, date: selectedDate)
+                ScrollView {
+                    VStack(spacing: 20) {
+                        CalendarView(selectedDate: $selectedDate)
+                            .padding(.horizontal)
                         
-                        Text("You've completed your workout for today!")
-                            .font(.title3)
-                            .fontWeight(.semibold)
-                            .multilineTextAlignment(.center)
-                            .padding(.top, 20)
-                            .padding(.horizontal, 10)
-                        
-                        Grid(alignment: .center) {
-                            GridRow {
-                                Text("")
-                                    .fontWeight(.bold)
-                                ForEach(0..<3, id: \.self) { index in
-                                    Text(measurementTitles[index])
-                                        .fontWeight(.bold)
-                                        .frame(maxWidth: .infinity)
+                        VStack(spacing: 15) {
+                            if todaySelected {
+                                Button {
+                                    router.currentRoute.append(Route.measurement(type: .pre))
+                                } label: {
+                                    PromptMeasurementView(type: .pre, unlocked: preUnlocked)
                                 }
-                            }
-                            Divider()
-                            GridRow {
-                                Text("Predicted:")
-                                    .fontWeight(.bold)
-                                ForEach(0..<3, id: \.self) { index in
-                                    Text("\(Int(round(predicted[index])))")
-                                        .frame(maxWidth: .infinity)
+                                .disabled(!preUnlocked)
+                                
+                                Button {
+                                    router.currentRoute.append(Route.measurement(type: .post))
+                                } label: {
+                                    PromptMeasurementView(type: .post, unlocked: postUnlocked)
                                 }
-                            }
-                            Divider()
-                            GridRow {
-                                Text("Actual:")
-                                    .fontWeight(.bold)
-                                ForEach(0..<3, id: \.self) { index in
-                                    HStack(spacing: 4) {
-                                        IndicatorView(difference: actual[index] - predicted[index])
-                                            .frame(width: 10, height: 10)
-                                        Text("\(Int(round(actual[index])))")
-                                    }
-                                    .frame(maxWidth: .infinity)
+                                .disabled(!postUnlocked)
+                                
+                                if !preUnlocked && !postUnlocked {
+                                    InsightsView(predicted: getMeasurements(type: .pre, date: selectedDate),
+                                                       actual: getMeasurements(type: .post, date: selectedDate))
+                                }
+                            } else {
+                                if insightsAvailable {
+                                    InsightsView(predicted: getMeasurements(type: .pre, date: selectedDate),
+                                                       actual: getMeasurements(type: .post, date: selectedDate))
+                                } else {
+                                    Text("No insights available for this date")
+                                        .font(.subheadline)
+                                        .foregroundColor(.gray)
                                 }
                             }
                         }
-                        .padding()
-                    }
-                } else {
-                    if insightsAvailable {
-                        let measurementTitles = ["Valence", "Arousal", "Motivation"]
-                        let predicted = getMeasurements(type: .pre, date: selectedDate)
-                        let actual = getMeasurements(type: .post, date: selectedDate)
+                        .padding(.horizontal)
                         
-                        Grid(alignment: .center) {
-                            GridRow {
-                                Text("")
-                                    .fontWeight(.bold)
-                                ForEach(0..<3, id: \.self) { index in
-                                    Text(measurementTitles[index])
-                                        .fontWeight(.bold)
-                                        .frame(maxWidth: .infinity)
-                                }
-                            }
-                            Divider()
-                            GridRow {
-                                Text("Predicted:")
-                                    .fontWeight(.bold)
-                                ForEach(0..<3, id: \.self) { index in
-                                    Text("\(Int(round(predicted[index])))")
-                                        .frame(maxWidth: .infinity)
-                                }
-                            }
-                            Divider()
-                            GridRow {
-                                Text("Actual:")
-                                    .fontWeight(.bold)
-                                ForEach(0..<3, id: \.self) { index in
-                                    HStack(spacing: 4) {
-                                        IndicatorView(difference: actual[index] - predicted[index])
-                                            .frame(width: 10, height: 10)
-                                        Text("\(Int(round(actual[index])))")
-                                    }
-                                    .frame(maxWidth: .infinity)
-                                }
-                            }
-                        }
-                        .padding()
-                    } else {
-                        Text("No insights available for this date")
+                        Spacer()
                     }
                 }
-                
-                Spacer()
-                Spacer()
             }
         }
         .onAppear {
