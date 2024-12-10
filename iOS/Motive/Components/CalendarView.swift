@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CalendarView: View {
-    @State private var selectedDate: Date = Date()
+    @Binding var selectedDate: Date
     
     private var calendar: Calendar {
         let calendar = Calendar.current
@@ -39,6 +39,34 @@ struct CalendarView: View {
     
     var body: some View {
         VStack {
+            HStack {
+                Button {
+                    selectedDate = calendar.date(byAdding: .month, value: -1, to: selectedDate) ?? selectedDate
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .foregroundColor(.blue)
+                        .padding()
+                }
+                
+                Spacer()
+                
+                Text(DateService.fullDate(from: selectedDate))
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.primary)
+                    .padding(.bottom, 10)
+                
+                Spacer()
+                
+                Button {
+                    selectedDate = calendar.date(byAdding: .month, value: 1, to: selectedDate) ?? selectedDate
+                } label: {
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(.blue)
+                        .padding()
+                }
+            }
+            
             HStack(spacing: 0) {
                 ForEach(daysOfWeek, id: \.self) { day in
                     Text(day)
@@ -66,11 +94,22 @@ struct CalendarView: View {
                         .foregroundStyle(sameDay ? .white : .black)
                         .clipShape(Circle())
                         .onTapGesture {
-                            // print("New date is \(date)")
                             selectedDate = date
                         }
                 }
             }
+            
+            Button {
+                selectedDate = Date()
+            } label: {
+                Text("Go to Today")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color.blue)
+                    .cornerRadius(10)
+            }
+            .padding(.top, 20)
         }
         .padding()
     }
@@ -78,9 +117,4 @@ struct CalendarView: View {
     private func isSameDay(date1: Date, date2: Date) -> Bool {
         calendar.isDate(date1, inSameDayAs: date2)
     }
-}
-
-
-#Preview {
-    CalendarView()
 }
