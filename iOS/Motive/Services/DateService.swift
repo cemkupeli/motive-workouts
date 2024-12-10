@@ -18,7 +18,7 @@ class DateService {
     
     static private let fullDateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE, MMM d"
+        formatter.dateFormat = "MMMM d, yyyy"
         return formatter
     }()
     
