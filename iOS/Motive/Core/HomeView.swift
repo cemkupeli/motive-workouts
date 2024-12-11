@@ -52,25 +52,30 @@ struct HomeView: View {
                     .background(.indigo)
                     .offset(y: -20)
                 
+                HStack {
+                    Button {
+                        router.currentRoute.append(Route.summary)
+                    } label: {
+                        Image(systemName: "chart.bar")
+                        Text("Stats")
+                    }
+                    
+                    Spacer()
+                    
+                    Button {
+                        router.currentRoute.append(Route.summary)
+                    } label: {
+                        Image(systemName: "list.bullet.rectangle")
+                        Text("Summary")
+                    }
+                }
+                .padding(.horizontal)
+                .padding(.top, -15)
+                
                 ScrollView {
                     VStack(spacing: 20) {
                         CalendarView(selectedDate: $selectedDate)
                             .padding(.horizontal)
-                        
-                        VStack(spacing: 10) {
-                            Button {
-                                router.currentRoute.append(Route.summary)
-                            } label: {
-                                Text("View Overall Statistics")
-                                    .font(.headline)
-                                    .padding()
-                                    .frame(maxWidth: .infinity)
-                                    .background(Color.blue)
-                                    .foregroundColor(.white)
-                                    .cornerRadius(10)
-                            }
-                        }
-                        .padding(.horizontal)
                         
                         // Daily measurement and insights section
                         VStack(spacing: 15) {
