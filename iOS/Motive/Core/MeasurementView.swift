@@ -15,6 +15,8 @@ struct MeasurementView: View {
     
     @Environment(\.dismiss) var dismiss
     
+    @State private var showConfirmationAlert = false
+    
     private var motivationLabels = [
         "1 - Very unmotivated",
         "2 - Unmotivated",
@@ -111,8 +113,7 @@ struct MeasurementView: View {
                 .padding(.top, 10)
             
             Button {
-                userDataManager.setMeasurements(type: type, measurements: [xPosition, yPosition, sliderValue])
-                dismiss()
+                showConfirmationAlert = true
             } label: {
                 Text("Save")
                     .font(.headline)
@@ -126,6 +127,21 @@ struct MeasurementView: View {
             .padding(.top, 20)
             
             Spacer()
+        }
+        .alert("Confirm Submission", isPresented: $showConfirmationAlert) {
+            Button("Cancel", role: .cancel) {}
+            Button("Submit", role: .destructive) {
+                userDataManager.setMeasurements(type: type, measurements: [xPosition, yPosition, sliderValue])
+                dismiss()
+            }
+        } message: {
+            Text("""
+            Are you sure you want to submit?
+
+            Valence: \(round(xPosition))
+            Arousal: \(round(yPosition))
+            Motivation: \(round(sliderValue))
+            """)
         }
     }
 
