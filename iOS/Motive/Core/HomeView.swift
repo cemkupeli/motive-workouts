@@ -90,6 +90,19 @@ struct HomeView: View {
                         }
                         .padding(.horizontal)
                         
+                        Button {
+                            router.currentRoute.append(Route.summary)
+                        } label: {
+                            Text("View Summary")
+                                .font(.headline)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                        }
+                        .padding(.horizontal)
+                        
                         Spacer()
                     }
                 }

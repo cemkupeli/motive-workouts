@@ -23,6 +23,8 @@ struct ContentView: View {
                             HomeView(router: router, userDataManager: userDataManager)
                         case .measurement(let type):
                             MeasurementView(userDataManager: userDataManager, type: type)
+                        case .summary:
+                            SummaryView(userDataManager: userDataManager)
                         }
                     }
             }

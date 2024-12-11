@@ -62,9 +62,62 @@ class UserDataManager: ObservableObject {
         }
     }
     
+    func computeAverages() -> (predictedValence: Double?, predictedArousal: Double?, predictedMotivation: Double?,
+                               actualValence: Double?, actualArousal: Double?, actualMotivation: Double?, count: Int) {
+        guard let user = user else {
+            return (nil, nil, nil, nil, nil, nil, 0)
+        }
+        
+        var predictedValenceSum = 0.0
+        var predictedArousalSum = 0.0
+        var predictedMotivationSum = 0.0
+        
+        var actualValenceSum = 0.0
+        var actualArousalSum = 0.0
+        var actualMotivationSum = 0.0
+        
+        var count = 0
+        
+        for (_, dayMeasurements) in user.measurements {
+            guard let beforeArray = dayMeasurements["predicted"], !beforeArray.isEmpty else { continue }
+            guard let afterArray = dayMeasurements["actual"], !afterArray.isEmpty else { continue }
+            
+            if beforeArray.count == 3 && afterArray.count == 3 {
+                predictedValenceSum += beforeArray[0]
+                predictedArousalSum += beforeArray[1]
+                predictedMotivationSum += beforeArray[2]
+                
+                actualValenceSum += afterArray[0]
+                actualArousalSum += afterArray[1]
+                actualMotivationSum += afterArray[2]
+                
+                count += 1
+            }
+        }
+        
+        let predictedValenceAvg = count > 0 ? predictedValenceSum / Double(count) : nil
+        let predictedArousalAvg = count > 0 ? predictedArousalSum / Double(count) : nil
+        let predictedMotivationAvg = count > 0 ? predictedMotivationSum / Double(count) : nil
+        
+        let actualValenceAvg = count > 0 ? actualValenceSum / Double(count) : nil
+        let actualArousalAvg = count > 0 ? actualArousalSum / Double(count) : nil
+        let actualMotivationAvg = count > 0 ? actualMotivationSum / Double(count) : nil
+        
+        return (predictedValenceAvg, predictedArousalAvg, predictedMotivationAvg,
+                actualValenceAvg, actualArousalAvg, actualMotivationAvg, count)
+    }
+        
     private func syncUserData() throws {
         guard let user else { return }
         let userRef = db.collection("users").document(user.id)
         try userRef.setData(from: user)
     }
+}
+
+extension UserDataManager {
+    static let testManager = {
+        let manager = UserDataManager()
+        manager.user = User.testUser
+        return manager
+    }()
 }

@@ -10,6 +10,7 @@ import SwiftUI
 enum Route: Hashable {
     case home
     case measurement(type: PromptType)
+    case summary
 }
 
 class Router: ObservableObject {
