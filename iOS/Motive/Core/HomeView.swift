@@ -63,10 +63,10 @@ struct HomeView: View {
                     Spacer()
                     
                     Button {
-                        router.currentRoute.append(Route.summary)
+                        router.currentRoute.append(Route.help)
                     } label: {
-                        Image(systemName: "list.bullet.rectangle")
-                        Text("Summary")
+                        Image(systemName: "questionmark.circle")
+                        Text("Help")
                     }
                 }
                 .padding(.horizontal)

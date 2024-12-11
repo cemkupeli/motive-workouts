@@ -25,6 +25,8 @@ struct ContentView: View {
                             MeasurementView(userDataManager: userDataManager, type: type)
                         case .summary:
                             SummaryView(userDataManager: userDataManager)
+                        case .help:
+                            HelpView()
                         }
                     }
             }

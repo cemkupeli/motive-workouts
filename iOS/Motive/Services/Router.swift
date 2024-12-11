@@ -11,6 +11,7 @@ enum Route: Hashable {
     case home
     case measurement(type: PromptType)
     case summary
+    case help
 }
 
 class Router: ObservableObject {
