@@ -26,7 +26,7 @@ struct ContentView: View {
                         case .summary:
                             SummaryView(userDataManager: userDataManager)
                         case .help:
-                            HelpView()
+                            HelpView(userDataManager: userDataManager)
                         }
                     }
             }

@@ -106,7 +106,18 @@ class UserDataManager: ObservableObject {
         return (predictedValenceAvg, predictedArousalAvg, predictedMotivationAvg,
                 actualValenceAvg, actualArousalAvg, actualMotivationAvg, count)
     }
+    
+    func submitSupportRequest(email: String, message: String) async throws {
+        let requestData: [String: Any] = [
+            "email": email,
+            "message": message,
+            "timestamp": FieldValue.serverTimestamp()
+        ]
         
+        let supportRef = db.collection("supportRequests")
+        _ = try await supportRef.addDocument(data: requestData)
+    }
+    
     private func syncUserData() throws {
         guard let user else { return }
         let userRef = db.collection("users").document(user.id)

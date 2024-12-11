@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct HelpView: View {
+    @ObservedObject var userDataManager: UserDataManager
+    
     @State private var email: String = ""
     @State private var message: String = ""
     
@@ -39,6 +41,13 @@ struct HelpView: View {
                 Spacer()
                 
                 Button("Submit") {
+                    Task {
+                        do {
+                            try await userDataManager.submitSupportRequest(email: email, message: message)
+                        } catch {
+                            print("Error submitting support request: \(error.localizedDescription)")
+                        }
+                    }
                     dismiss()
                 }
                 .font(.headline)
@@ -57,5 +66,5 @@ struct HelpView: View {
 }
 
 #Preview {
-    HelpView()
+    HelpView(userDataManager: UserDataManager())
 }
