@@ -57,8 +57,25 @@ struct HomeView: View {
                         CalendarView(selectedDate: $selectedDate)
                             .padding(.horizontal)
                         
+                        VStack(spacing: 10) {
+                            Button {
+                                router.currentRoute.append(Route.summary)
+                            } label: {
+                                Text("View Overall Statistics")
+                                    .font(.headline)
+                                    .padding()
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color.blue)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(10)
+                            }
+                        }
+                        .padding(.horizontal)
+                        
+                        // Daily measurement and insights section
                         VStack(spacing: 15) {
                             if todaySelected {
+                                // Pre-workout prompt
                                 Button {
                                     router.currentRoute.append(Route.measurement(type: .pre))
                                 } label: {
@@ -66,6 +83,7 @@ struct HomeView: View {
                                 }
                                 .disabled(!preUnlocked)
                                 
+                                // Post-workout prompt
                                 Button {
                                     router.currentRoute.append(Route.measurement(type: .post))
                                 } label: {
@@ -73,37 +91,33 @@ struct HomeView: View {
                                 }
                                 .disabled(!postUnlocked)
                                 
+                                // Insights (only if both pre- and post-workout reports completed)
                                 if !preUnlocked && !postUnlocked {
-                                    InsightsView(predicted: getMeasurements(type: .pre, date: selectedDate),
-                                                       actual: getMeasurements(type: .post, date: selectedDate))
+                                    InsightsView(
+                                        predicted: getMeasurements(type: .pre, date: selectedDate),
+                                        actual: getMeasurements(type: .post, date: selectedDate)
+                                    )
+                                    .padding(.top)
                                 }
                             } else {
+                                // Viewing a past/future date
                                 if insightsAvailable {
-                                    InsightsView(predicted: getMeasurements(type: .pre, date: selectedDate),
-                                                       actual: getMeasurements(type: .post, date: selectedDate))
+                                    InsightsView(
+                                        predicted: getMeasurements(type: .pre, date: selectedDate),
+                                        actual: getMeasurements(type: .post, date: selectedDate)
+                                    )
+                                    .padding(.top)
                                 } else {
                                     Text("No insights available for this date")
                                         .font(.subheadline)
                                         .foregroundColor(.gray)
+                                        .padding(.top)
                                 }
                             }
                         }
                         .padding(.horizontal)
                         
-                        Button {
-                            router.currentRoute.append(Route.summary)
-                        } label: {
-                            Text("View Summary")
-                                .font(.headline)
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .background(.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(10)
-                        }
-                        .padding(.horizontal)
-                        
-                        Spacer()
+                        Spacer(minLength: 40)
                     }
                 }
             }
