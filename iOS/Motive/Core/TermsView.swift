@@ -10,11 +10,17 @@ import SwiftUI
 extension UserDefaults {
     private enum Keys {
         static let hasAgreedToTerms = "hasAgreedToTerms"
+        static let hasSeenOnboarding = "hasSeenOnboarding"
     }
 
     var hasAgreedToTerms: Bool {
         get { bool(forKey: Keys.hasAgreedToTerms) }
         set { set(newValue, forKey: Keys.hasAgreedToTerms) }
+    }
+    
+    var hasSeenOnboarding: Bool {
+        get { bool(forKey: Keys.hasSeenOnboarding) }
+        set { set(newValue, forKey: Keys.hasSeenOnboarding) }
     }
 }
 
@@ -67,6 +73,7 @@ struct TermsView: View {
             .buttonStyle(.borderedProminent)
             .padding()
         }
+        .padding(.top)
     }
 
     private func agreeToTerms() {

@@ -14,6 +14,8 @@ struct ContentView: View {
     var body: some View {
         if !router.agreedToTerms {
             TermsView(router: router)
+        } else if !router.onboardingSeen {
+            OnboardingView(router: router)
         } else {
             NavigationStack(path: $router.currentRoute) {
                 HomeView(router: router, userDataManager: userDataManager)

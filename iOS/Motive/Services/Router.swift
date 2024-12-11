@@ -17,4 +17,5 @@ enum Route: Hashable {
 class Router: ObservableObject {
     @Published var currentRoute = NavigationPath()
     @Published var agreedToTerms = UserDefaults.standard.hasAgreedToTerms
+    @Published var onboardingSeen = UserDefaults.standard.hasSeenOnboarding
 }
