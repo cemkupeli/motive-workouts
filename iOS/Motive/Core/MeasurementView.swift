@@ -138,9 +138,9 @@ struct MeasurementView: View {
             Text("""
             Are you sure you want to submit?
 
-            Valence: \(round(xPosition))
-            Arousal: \(round(yPosition))
-            Motivation: \(round(sliderValue))
+            Valence: \(Int(xPosition))
+            Arousal: \(Int(yPosition))
+            Motivation: \(Int(sliderValue))
             """)
         }
     }
